@@ -1,9 +1,22 @@
 <?php
 
-namespace Tests;
+use App\Dice\Dice;
 
-trait DiceTrait
+class DiceTest extends PHPUnit_Framework_TestCase
 {
+	public function setUp()
+	{
+		$this->dice = new Dice;
+	}
+
+	public function testCanBeInstantiated()
+	{
+		$this->assertInstanceOf(
+			Dice::class,
+			$this->dice
+		);
+	}
+
 	public function testCanBeRolled()
 	{
 		$this->assertNotEmpty($this->dice->roll());

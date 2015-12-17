@@ -2,7 +2,7 @@
 
 namespace App\Dice;
 
-trait RollTrait
+class Dice implements DiceContract
 {
 	/**
 	 * Roll the dice!
