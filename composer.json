@@ -1,0 +1,24 @@
+{
+    "name": "code-kata/pair-and-ace",
+    "description": "Recrutation task",
+    "require-dev": {
+        "phpunit/phpunit": "5.1.*",
+        "mockery/mockery": "0.9.*"
+    },
+    "authors": [
+        {
+            "name": "Jakub Giminski",
+            "email": "j.giminski@holonglobe.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
