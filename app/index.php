@@ -17,13 +17,3 @@ $dices = [
 
 $referee = new Referee;
 $view = new View;
-
-foreach ($players as $player) {
-	$view->pushNewTurnMessage();
-
-	$results = $player->rollDices($dices);
-
-	$view->pushNewTurnMessage();
-
-	if ($referee->)
-}

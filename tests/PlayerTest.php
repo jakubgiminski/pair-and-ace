@@ -62,4 +62,10 @@ class PlayerTest extends PHPUnit_Framework_TestCase
 			$results
 		);
 	}
+
+	public function testNameCanBeFetchedWithAGetter()
+	{
+		$player = new Player('Henryk');
+		$this->assertEquals($player->getName(), 'Henryk');
+	}
 }

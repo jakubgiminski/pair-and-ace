@@ -28,4 +28,9 @@ class Player
 	{
 		return $dice->roll();
 	}
+
+	public function getName()
+	{
+		return $this->name;
+	}
 }

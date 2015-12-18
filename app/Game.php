@@ -17,7 +17,7 @@ class Game
 		$this->view = $view;
 	}
 
-	public function addPlayer(Player $player)
+	private function addPlayer(Player $player)
 	{
 		$this->players[] = $player;
 
@@ -33,7 +33,7 @@ class Game
 		return $this;
 	}
 
-	public function addDice(Dice $player)
+	private function addDice(Dice $player)
 	{
 		$this->dices[] = $dice;
 
@@ -49,20 +49,20 @@ class Game
 		return $this;
 	}
 
-	public function isResultWinnig(array $result)
+	private function isResultWinnig(array $result)
 	{
 		return false;
 		// todo
 	}
 
-	public function setWinner(Player $player)
+	private function setWinner(Player $player)
 	{
 		$this->winner = $player;
 	}
 
-	public function isThereAWinner()
+	private function thereIsNoWinner()
 	{
-		return $this->winner instanceof Player;
+		return !$this->winner instanceof Player;
 	}
 
 	public function run()
@@ -70,21 +70,32 @@ class Game
 		$this->view->displayStartGameMessage();
 
 		$roundCount = 1;
+		$roundCountLimit = 300;
 
-		while (!$this->isThereAWinner()) {
+		while ($this->thereIsNoWinner()) {
+
+			if ($roundCount > $roundCountLimit) {
+				$this->view->displayNoLuckMessage();
+				break;
+			}
+
 			$this->view->displayNewRoundMessage($roundCount);
 
 			foreach ($this->players as $player) {
+
 				$result = $player->rollDices($this->dices);
 
 				if ($this->isResultWinnig($result)) {
 					$this->setWinner($player);
+					$this->view->displayWinnerMessage($player->getName());
 					break;
 				}
 			}
+
+			$roundCount++;
 		}
 
-		$this->view->displayEndGameMessage($player->getName());
+		$this->view->displayGameFinishedMessage();
 
 		return $this;
 	}
