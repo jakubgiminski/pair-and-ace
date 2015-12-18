@@ -1,23 +1,27 @@
 <?php
 
-namespace App;
+namespace App\Game;
 
+use App\View\ViewContract;
+use App\Dice\DiceContract;
+
+// todo Implement contract
 class Game
 {
-	protected $players;
-
-	protected $dices;
-
 	protected $view;
 
-	protected $winner;
+	protected $players = [];
 
-	public function __construct(View $view)
+	protected $dices = [];
+
+	protected $winner = null;
+
+	public function __construct(ViewContract $view)
 	{
 		$this->view = $view;
 	}
 
-	private function addPlayer(Player $player)
+	public function addPlayer(PlayerContract $player)
 	{
 		$this->players[] = $player;
 
@@ -33,7 +37,7 @@ class Game
 		return $this;
 	}
 
-	private function addDice(Dice $player)
+	private function addDice(DiceContract $dice)
 	{
 		$this->dices[] = $dice;
 
@@ -42,11 +46,20 @@ class Game
 
 	public function addDices(array $dices)
 	{
+		if (count($dices) != 3) {
+			throw new \InvalidArgumentException('You can only add three dices for this game to make sense.');
+		}
+
 		foreach ($dices as $dice) {
 			$this->addDice($dice);
 		}
 
 		return $this;
+	}
+
+	public function getDices()
+	{
+		return $this->dices;
 	}
 
 	private function isResultWinnig(array $result)
@@ -67,7 +80,7 @@ class Game
 
 	public function run()
 	{
-		$this->view->displayStartGameMessage();
+		$this->log->gameStarts();
 
 		$roundCount = 1;
 		$roundCountLimit = 300;
@@ -75,11 +88,11 @@ class Game
 		while ($this->thereIsNoWinner()) {
 
 			if ($roundCount > $roundCountLimit) {
-				$this->view->displayNoLuckMessage();
+				$this->log->nobodyWins();
 				break;
 			}
 
-			$this->view->displayNewRoundMessage($roundCount);
+			$this->log->newRoundStarts($roundCount);
 
 			foreach ($this->players as $player) {
 
@@ -87,7 +100,7 @@ class Game
 
 				if ($this->isResultWinnig($result)) {
 					$this->setWinner($player);
-					$this->view->displayWinnerMessage($player->getName());
+					$this->log->playerWins($player->getName());
 					break;
 				}
 			}
@@ -95,7 +108,7 @@ class Game
 			$roundCount++;
 		}
 
-		$this->view->displayGameFinishedMessage();
+		$this->log->gameEnds();
 
 		return $this;
 	}
