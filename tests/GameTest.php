@@ -131,4 +131,50 @@ class GameTest extends PHPUnit_Framework_TestCase
 			$lastTenPlayers
 		);
 	}
+
+	public function testCanSetWinner()
+	{
+		$winner = $this->mockPlayer('Karol');
+		$this->game->setWinner($winner);
+
+		$this->assertEquals(
+			$winner,
+			$this->game->getWinner()
+		);
+	}
+
+	public function testCanTellIfThereIsAWinner()
+	{
+		$winner = $this->mockPlayer('Rysiek');
+		$this->game->setWinner($winner);
+
+		$this->assertFalse($this->game->thereIsNoWinner());
+	}
+
+	public function testCanTellIfThereIsNoWinner()
+	{
+		$this->assertTrue($this->game->thereIsNoWinner());
+	}
+
+	public function testCanTellIfResultIsWinning()
+	{
+		$winningResult = [1, 2, 2];
+		$this->assertTrue($this->game->isResultWinnig($winningResult));
+	}
+
+	public function testCanTellThatResultIsNotWinnigIfThereIsNoPair()
+	{
+		$result = [1, 2, 6];
+		$this->assertFalse(
+			$this->game->isResultWinnig($result)
+		);
+	}
+
+	public function testCanTellThatResultIsNotWinnigIfThereIsNoSixOrOne()
+	{
+		$result = [3, 3, 3];
+		$this->assertFalse(
+			$this->game->isResultWinnig($result)
+		);
+	}
 }

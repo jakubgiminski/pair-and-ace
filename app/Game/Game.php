@@ -68,20 +68,34 @@ class Game
 		return $this->dices;
 	}
 
-	private function isResultWinnig(array $result)
+	public function isResultWinnig(array $result)
 	{
-		return false;
-		// todo
+		return !$this->thereIsNoPair($result) and !$this->thereIsNoSixOrOne($result);
 	}
 
-	private function setWinner(Player $player)
+	private function thereIsNoPair(array $result)
+	{
+		return $result == array_unique($result);
+	}
+
+	private function thereIsNoSixOrOne(array $result)
+	{
+		return !in_array(1, $result) and !in_array(6, $result);
+	}
+
+	public function setWinner(PlayerContract $player)
 	{
 		$this->winner = $player;
 	}
 
-	private function thereIsNoWinner()
+	public function getWinner()
 	{
-		return !$this->winner instanceof Player;
+		return $this->winner;
+	}
+
+	public function thereIsNoWinner()
+	{
+		return $this->winner == null;
 	}
 
 	public function run()
