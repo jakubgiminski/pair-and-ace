@@ -18,31 +18,42 @@ class GameLog implements GameLogContract
 
 	public function addEntry($entry)
 	{
-		$this->log[] = time() . ': ' . $entry;
+		$this->log[] = $entry;
 	}
 
 	public function gameStarts()
 	{
-		$this->addEntry('Game starts.');
+		$this->addEntry('GAME BEGINS');
 	}
 
 	public function nobodyWins()
 	{
-		$this->addEntry('Maximum number of rounds exceeded. Nobody wins.');
+		$this->addEntry('MAXIMUM NUMBER OF ROUNDS EXCEEDED');
 	}
 
 	public function newRoundStarts($roundCount)
 	{
-		$this->addEntry("Round {$roundCount} starts.");
+		$this->addEntry("ROUND {$roundCount} BEGINS");
 	}
 
 	public function playerWins($playerName)
 	{
-		$this->addEntry("Player {$playerName} wins.");
+		$this->addEntry("{$playerName} WINS");
 	}
 
 	public function gameEnds()
 	{
-		$this->addEntry('Game ends.');
+		$this->addEntry('END OF GAME');
+	}
+
+	public function playerRollsDices($player, array $results)
+	{
+		$resultString = '';
+
+		foreach ($results as $result) {
+			$resultString .= " {$result}";
+		}
+
+		$this->addEntry("{$player} rolls dices and the result is:{$resultString}");
 	}
 }

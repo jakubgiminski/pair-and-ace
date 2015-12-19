@@ -17,6 +17,8 @@ class Game
 
 	protected $winner = null;
 
+	protected $roundLimit = 100;
+
 	public function __construct(GameLogContract $log)
 	{
 		$this->log = $log;
@@ -107,7 +109,7 @@ class Game
 
 		while ($this->thereIsNoWinner()) {
 
-			if ($roundCount > $roundCountLimit) {
+			if ($roundCount > $this->roundLimit) {
 				$this->log->nobodyWins();
 				break;
 			}
@@ -117,6 +119,7 @@ class Game
 			foreach ($this->players as $player) {
 
 				$result = $player->rollDices($this->dices);
+				$this->log->playerRollsDices($player->getName(), $result);
 
 				if ($this->isResultWinnig($result)) {
 					$this->setWinner($player);
@@ -131,5 +134,10 @@ class Game
 		$this->log->gameEnds();
 
 		return $this;
+	}
+
+	public function getGameReportAsArray()
+	{
+		return $this->log->getReportAsArray();
 	}
 }
