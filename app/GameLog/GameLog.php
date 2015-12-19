@@ -6,9 +6,14 @@ class GameLog implements GameLogContract
 {
 	private $log = [];
 
-	public function getAll()
+	public function getReportAsArray()
 	{
 		return $this->log;
+	}
+
+	public function getLastEntry()
+	{
+		return end($this->log);
 	}
 
 	public function addEntry($entry)
@@ -36,7 +41,7 @@ class GameLog implements GameLogContract
 		$this->addEntry("Player {$playerName} wins.");
 	}
 
-	public function playerGameEnds()
+	public function gameEnds()
 	{
 		$this->addEntry('Game ends.');
 	}
