@@ -10,16 +10,16 @@ use App\Player\Player;
 $game = new Game(new GameLog);
 
 $game->addDices([
-	new Dice,
-	new Dice,
-	new Dice,
+	new dice,
+	new dice,
+	new dice,
 ]);
 
 $game->addPlayers([
-	new Player('Harry'),
-	new Player('Lucjan'),
-	new Player('Bartek'),
-	new Player('Duszek')
+	new player('Harry'),
+	new player('Lucjan'),
+	new player('Bartek'),
+	new player('Duszek')
 ]);
 
 $game->run();

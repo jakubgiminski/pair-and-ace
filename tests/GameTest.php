@@ -6,7 +6,14 @@ class GameTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$gameLog = Mockery::mock('App\GameLog\GameLogContract');
+		$gameLog = Mockery::mock('App\GameLog\GameLogContract')
+			->shouldReceive('gameStarts')->andReturn(Mockery::self())
+			->shouldReceive('newRoundStarts')->andReturn(Mockery::self())
+			->shouldReceive('playerRollsDices')->andReturn(Mockery::self())
+			->shouldReceive('playerWins')->andReturn(Mockery::self())
+			->shouldReceive('gameEnds')->andReturn(Mockery::self())
+			->mock();
+
 		$this->game = new Game($gameLog);
 	}
 
@@ -25,6 +32,8 @@ class GameTest extends PHPUnit_Framework_TestCase
 		return Mockery::mock('App\Player\Player')
 			->shouldReceive('getName')
 			->andReturn($playerName)
+			->shouldReceive('rollDices')
+			->andReturn([1,1,1])
 			->mock();
 	}
 
@@ -176,5 +185,52 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse(
 			$this->game->isResultWinnig($result)
 		);
+	}
+
+	/**
+	 * @expectedException Exception
+	 */
+	public function testCannotRunWithoutDices()
+	{
+		$this->game->addPlayers([
+			$this->mockPlayer('Ziuta'),
+			$this->mockPlayer('Mariolka')
+		]);
+
+		$this->game->run();
+	}
+
+	/**
+	 * @expectedException Exception
+	 */
+	public function testCannotRunWithoutPlayers()
+	{
+		$this->game->addDices([
+			$this->mockDiceContract(),
+			$this->mockDiceContract(),
+			$this->mockDiceContract()
+		]);
+
+		$this->game->run();
+	}
+
+	/**
+	 * @expectedException Exception
+	 */
+	public function testCanOnlyRunOnce()
+	{
+		$this->game->addDices([
+			$this->mockDiceContract(),
+			$this->mockDiceContract(),
+			$this->mockDiceContract()
+		]);
+
+		$this->game->addPlayers([
+			$this->mockPlayer(),
+			$this->mockPlayer()
+		]);
+
+		$this->game->run();
+		$this->game->run();
 	}
 }

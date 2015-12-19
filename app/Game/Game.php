@@ -19,6 +19,8 @@ class Game
 
 	protected $roundLimit = 100;
 
+	protected $gameRun = false;
+
 	public function __construct(GameLogContract $log)
 	{
 		$this->log = $log;
@@ -102,10 +104,12 @@ class Game
 
 	public function run()
 	{
-		$this->log->gameStarts();
+		$this->guardAgainstNoDices();
+		$this->guardAgainstNoPlayers();
+		$this->guardAgainsMultipleGameRuns();
 
+		$this->log->gameStarts();
 		$roundCount = 1;
-		$roundCountLimit = 300;
 
 		while ($this->thereIsNoWinner()) {
 
@@ -132,6 +136,7 @@ class Game
 		}
 
 		$this->log->gameEnds();
+		$this->gameRun = true;
 
 		return $this;
 	}
@@ -139,5 +144,26 @@ class Game
 	public function getGameReportAsArray()
 	{
 		return $this->log->getReportAsArray();
+	}
+
+	private function guardAgainstNoDices()
+	{
+		if (empty($this->dices)) {
+			throw new \Exception('The game can\'t run with no dices! Add dices first.');
+		}
+	}
+
+	public function guardAgainstNoPlayers()
+	{
+		if (empty($this->players)) {
+			throw new \Exception('The game can\'t run with no players! Add players first.');
+		}
+	}
+
+	public function guardAgainsMultipleGameRuns()
+	{
+		if ($this->gameRun) {
+			throw new \Exception('One instance of the Game can only run once. Create new instance.');
+		}
 	}
 }
