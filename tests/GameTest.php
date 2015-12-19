@@ -6,13 +6,26 @@ class GameTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$view = Mockery::mock('App\View\ViewContract');
-		$this->game = new Game($view);
+		$gameLog = Mockery::mock('App\GameLog\GameLogContract');
+		$this->game = new Game($gameLog);
 	}
 
 	private function mockDiceContract()
 	{
 		return Mockery::mock('App\Dice\DiceContract');
+	}
+
+	private function mockPlayerContract()
+	{
+		return Mockery::mock('App\Player\PlayerContract');
+	}
+
+	private function mockPlayer($playerName = 'Zygmunt')
+	{
+		return Mockery::mock('App\Player\Player')
+			->shouldReceive('getName')
+			->andReturn($playerName)
+			->mock();
 	}
 
 	public function testCanBeInstantiated()
@@ -42,7 +55,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testCannotAddLessThanThreeDices()
+	public function testCannotAddTwoDices()
 	{
 		$dices = [
 			$this->mockDiceContract(),
@@ -55,7 +68,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testCannotAddMoreThanThreeDices()
+	public function testCannotAddFourDices()
 	{
 		$dices = [
 			$this->mockDiceContract(),
@@ -67,8 +80,55 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$this->game->addDices($dices);
 	}
 
-	// public function testCanAddOnePlayer()
-	// {
-	// 	$this->
-	// }
+	public function testCanAddOnePlayer()
+	{
+		$playerName = uniqid('Zenek');
+		$player = $this->mockPlayer($playerName);
+		$this->game->addPlayer($player);
+
+		$players = $this->game->getPlayers();
+		$lastPlayer = end($players);
+
+		$this->assertEquals(
+			$player->getName(),
+			$lastPlayer->getName()
+		);
+	}
+
+	public function testCanAddThreePlayers()
+	{
+		$players = [
+			$this->mockPlayer('Szczepan'),
+			$this->mockPlayer('Mariusz'),
+			$this->mockPlayer('Barnaba')
+		];
+
+		$this->game->addPlayers($players);
+
+		$players = $this->game->getPlayers();
+		$lastThreePlayers = array_slice($players, -3, 3, true);
+
+		$this->assertEquals(
+			$players,
+			$lastThreePlayers
+		);
+	}
+
+	public function testCanAddTenPlayers()
+	{
+		$players = [];
+		for ($i = 0; $i < 10; $i++) {
+			$players[] = $this->mockPlayer(uniqid('Szczepan'));
+		}
+
+		$this->game->addPlayers($players);
+
+		$players = $this->game->getPlayers();
+		$lastTenPlayers = array_slice($players, -10, 10, true);
+
+		$this->assertEquals(
+			$players,
+			$lastTenPlayers
+		);
+	}
 }

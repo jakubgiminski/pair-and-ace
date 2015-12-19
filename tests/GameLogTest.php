@@ -14,14 +14,13 @@ class GameLogTest extends PHPUnit_Framework_TestCase
 		return uniqid('Something is happening!');
 	}
 
-	// private function logEntries($numEntries = 3)
-	// {
-	// 	for ($i = 0; $numEntries > $i; $i++){
-	// 		$this->log->addEntry($this->mockEntry());
-	// 	}
-
-	// 	return $this;
-	// }
+	public function testCanBeInstantiated()
+	{
+		$this->assertInstanceOf(
+			GameLog::class,
+			$this->log
+		);
+	}
 
 	public function testCanAddEntry()
 	{

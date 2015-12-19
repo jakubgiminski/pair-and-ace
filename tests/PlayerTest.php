@@ -1,6 +1,6 @@
 <?php
 
-use App\Player;
+use App\Player\Player;
 
 class PlayerTest extends PHPUnit_Framework_TestCase
 {

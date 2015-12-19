@@ -2,13 +2,14 @@
 
 namespace App\Game;
 
-use App\View\ViewContract;
+use App\Player\PlayerContract;
+use App\GameLog\GameLogContract;
 use App\Dice\DiceContract;
 
 // todo Implement contract
 class Game
 {
-	protected $view;
+	protected $log;
 
 	protected $players = [];
 
@@ -16,9 +17,9 @@ class Game
 
 	protected $winner = null;
 
-	public function __construct(ViewContract $view)
+	public function __construct(GameLogContract $log)
 	{
-		$this->view = $view;
+		$this->log = $log;
 	}
 
 	public function addPlayer(PlayerContract $player)
@@ -35,6 +36,11 @@ class Game
 		}
 
 		return $this;
+	}
+
+	public function getPlayers()
+	{
+		return $this->players;
 	}
 
 	private function addDice(DiceContract $dice)

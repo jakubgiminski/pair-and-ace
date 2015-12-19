@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Player;
 
 use App\Dice\DiceContract;
 
-class Player
+class Player implements PlayerContract
 {
 	private $name;
 
