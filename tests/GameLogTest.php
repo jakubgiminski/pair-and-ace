@@ -22,18 +22,7 @@ class GameLogTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
-	public function testCanAddEntry()
-	{
-		$entry = $this->mockEntry();
-		$this->log->addEntry($entry);
-
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
-	}
-
-	public function testCanGetLastEntry()
+	public function testCanAddEntryAndGetTheLastOne()
 	{
 		$entry = $this->mockEntry();
 		$this->log->addEntry($entry);

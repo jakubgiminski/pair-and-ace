@@ -74,17 +74,24 @@ class Game
 
 	public function isResultWinnig(array $result)
 	{
-		return !$this->thereIsNoPair($result) and !$this->thereIsNoSixOrOne($result);
+		return $this->thereIsAPair($result) and $this->thereIsOneBesidesThePair($result);
 	}
 
-	private function thereIsNoPair(array $result)
+	private function thereIsAPair(array $result)
 	{
-		return $result == array_unique($result);
+		return $result != array_unique($result);
 	}
 
-	private function thereIsNoSixOrOne(array $result)
+	private function thereIsOneBesidesThePair(array $result)
 	{
-		return !in_array(1, $result) and !in_array(6, $result);
+		$arrayValues = array_count_values($result);
+
+		if (isset($arrayValues[1])) {
+			// Is there one or three occurances of number one?
+			return $arrayValues[1] == 1 or $arrayValues[1] == 3;
+		}
+
+		return false;
 	}
 
 	public function setWinner(PlayerContract $player)

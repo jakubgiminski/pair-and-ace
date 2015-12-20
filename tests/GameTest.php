@@ -179,14 +179,21 @@ class GameTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
-	public function testCanTellThatResultIsNotWinnigIfThereIsNoSixOrOne()
+	public function testCanTellThatResultIsNotWinnigIfThereIsNoOne()
 	{
-		$result = [3, 3, 3];
+		$result = [3, 4, 5];
 		$this->assertFalse(
 			$this->game->isResultWinnig($result)
 		);
 	}
 
+	public function testCanTellThatResultIsNotWinnigIfThereIsNoOneBesidesThePair()
+	{
+		$result = [1, 1, 5];
+		$this->assertFalse(
+			$this->game->isResultWinnig($result)
+		);
+	}
 	/**
 	 * @expectedException Exception
 	 */
