@@ -1,6 +1,6 @@
 {
-    "name": "code-kata/pair-and-ace",
-    "description": "Recrutation task",
+    "name": "jakubgiminski/pair-and-ace",
+    "description": "Desmart recrutation task",
     "require-dev": {
         "phpunit/phpunit": "5.1.*",
         "mockery/mockery": "0.9.*"
