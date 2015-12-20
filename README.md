@@ -1,7 +1,7 @@
 # Pair and Ace (game simulation)
 
 ## Overview
-This project was created as a recrutation task for Desmart - an IT company in Gdynia, Poland. PHP 5.6 or higher is required to run, and there are no external dependencies other than those defined in the composer.json file.
+This project was created as a recruitment task for Desmart - an IT company in Gdynia, Poland. PHP 5.6 or higher is required to run, and there are no external dependencies other than those defined in the composer.json file.
 To run the simulation just clone the project, run `composer update` and then `php index.php` to execute the simulation.
 
 ## Requirements
