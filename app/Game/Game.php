@@ -6,8 +6,7 @@ use App\Player\PlayerContract;
 use App\GameLog\GameLogContract;
 use App\Dice\DiceContract;
 
-// todo Implement contract
-class Game
+class Game implements GameContract
 {
 	protected $log;
 
@@ -160,14 +159,14 @@ class Game
 		}
 	}
 
-	public function guardAgainstNoPlayers()
+	private function guardAgainstNoPlayers()
 	{
 		if (empty($this->players)) {
 			throw new \Exception('The game can\'t run with no players! Add players first.');
 		}
 	}
 
-	public function guardAgainsMultipleGameRuns()
+	private function guardAgainsMultipleGameRuns()
 	{
 		if ($this->gameRun) {
 			throw new \Exception('One instance of the Game can only run once. Create new instance.');
