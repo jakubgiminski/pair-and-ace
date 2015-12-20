@@ -46,7 +46,7 @@ class GameLog implements GameLogContract
 		$this->addEntry('END OF GAME');
 	}
 
-	public function playerRollsDices($player, array $results)
+	public function playerRollsDices($playerName, array $results)
 	{
 		$resultString = '';
 
@@ -54,6 +54,6 @@ class GameLog implements GameLogContract
 			$resultString .= " {$result}";
 		}
 
-		$this->addEntry("{$player} rolls dices and the result is:{$resultString}");
+		$this->addEntry("{$playerName} rolls dices and the result is:{$resultString}");
 	}
 }

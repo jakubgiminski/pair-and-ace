@@ -146,6 +146,10 @@ class Game implements GameContract
 
     public function getGameReportAsArray()
     {
+    	if (!$this->gameRun) {
+    		throw new \Exception('Cannot get report for a game, that didn\'t run yet.');
+    	}
+
         return $this->log->getReportAsArray();
     }
 

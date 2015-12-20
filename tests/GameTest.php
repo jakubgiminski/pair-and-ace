@@ -12,6 +12,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 			->shouldReceive('playerRollsDices')->andReturn(Mockery::self())
 			->shouldReceive('playerWins')->andReturn(Mockery::self())
 			->shouldReceive('gameEnds')->andReturn(Mockery::self())
+			->shouldReceive('getReportAsArray')->andReturn(['mocked report'])
 			->mock();
 
 		$this->game = new Game($gameLog);
@@ -141,7 +142,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
-	public function testCanSetWinner()
+	public function testCanSetAndGetWinner()
 	{
 		$winner = $this->mockPlayer('Karol');
 		$this->game->setWinner($winner);
@@ -226,6 +227,34 @@ class GameTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCanOnlyRunOnce()
 	{
+		$this->addThreeDicesAndTwoPlayers();
+
+		$this->game->run();
+		$this->game->run();
+	}
+
+	public function testCanGenerateReportAsArray()
+	{
+		$this->addThreeDicesAndTwoPlayers();
+		$this->game->run();
+
+		$this->assertEquals(
+			$this->game->getGameReportAsArray(),
+			['mocked report']
+		);
+	}
+
+	/**
+	 * @expectedException Exception
+	 */
+	public function testCannotGenerateReportIfTheGameDidntRunYet()
+	{
+		$this->addThreeDicesAndTwoPlayers();
+		$this->game->getGameReportAsArray();
+	}
+
+	private function addThreeDicesAndTwoPlayers()
+	{
 		$this->game->addDices([
 			$this->mockDiceContract(),
 			$this->mockDiceContract(),
@@ -236,8 +265,5 @@ class GameTest extends PHPUnit_Framework_TestCase
 			$this->mockPlayer(),
 			$this->mockPlayer()
 		]);
-
-		$this->game->run();
-		$this->game->run();
 	}
 }

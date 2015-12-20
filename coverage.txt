@@ -1,17 +1,17 @@
 
 
 Code Coverage Report:    
-  2015-12-20 14:49:54    
+  2015-12-20 16:30:47    
                          
  Summary:                
   Classes: 75.00% (3/4)  
-  Methods: 90.62% (29/32)
-  Lines:   95.29% (81/85)
+  Methods: 93.75% (30/32)
+  Lines:   96.55% (84/87)
 
 \App\Dice::Dice
   Methods: 100.00% ( 1/ 1)   Lines: 100.00% (  1/  1)
 \App\Game::Game
-  Methods:  83.33% (15/18)   Lines:  92.98% ( 53/ 57)
+  Methods:  88.89% (16/18)   Lines:  94.92% ( 56/ 59)
 \App\GameLog::GameLog
   Methods: 100.00% ( 9/ 9)   Lines: 100.00% ( 19/ 19)
 \App\Player::Player

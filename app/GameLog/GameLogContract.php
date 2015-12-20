@@ -13,5 +13,5 @@ interface GameLogContract
 	public function newRoundStarts($roundCount);
 	public function playerWins($playerName);
 	public function gameEnds();
-	public function playerRollsDices($player, array $result);
+	public function playerRollsDices($playerName, array $result);
 }
