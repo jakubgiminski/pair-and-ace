@@ -1,125 +1,92 @@
 <?php
 
 use App\GameLog\GameLog;
+use PHPUnit\Framework\TestCase;
 
-class GameLogTest extends PHPUnit_Framework_TestCase
+class GameLogTest extends TestCase
 {
-	public function setUp()
-	{
-		$this->log = new GameLog;
-	}
-
-	private function mockEntry()
-	{
-		return uniqid('Something is happening!');
-	}
-
 	public function testCanBeInstantiated()
 	{
-		$this->assertInstanceOf(
-			GameLog::class,
-			$this->log
-		);
+		self::assertInstanceOf(GameLog::class, new GameLog);
 	}
 
 	public function testCanAddEntryAndGetTheLastOne()
 	{
-		$entry = $this->mockEntry();
-		$this->log->addEntry($entry);
+	    $log = new GameLog;
+        $logEntry = $this->mockEntry();
 
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+        $log->addEntry($logEntry);
+
+		self::assertSame($logEntry, $log->getLastEntry());
 	}
 
 	public function testCanGetReportAsArray()
 	{
-		$entry = $this->mockEntry();
-		$this->log->addEntry($entry);
+	    $log = new GameLog;
 
-		$report = $this->log->getReportAsArray();
+        $log->addEntry($this->mockEntry());
+        $log->addEntry($this->mockEntry());
+		$log->addEntry($this->mockEntry());
 
-		$this->assertStringEndsWith(
-			$entry,
-			end($report)
-		);
+		$report = $log->getReportAsArray();
+
+        self::assertCount(3, $report);
 	}
 
 	public function testCanLogGameStarts()
 	{
-		$entry = 'GAME BEGINS';
-		$this->log->gameStarts($entry);
+        $log = new GameLog;
+		$log->gameStarts();
 
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+		self::assertSame('GAME BEGINS', $log->getLastEntry());
 	}
 
 	public function testCanLogNobodyWins()
 	{
-		$entry = 'MAXIMUM NUMBER OF ROUNDS EXCEEDED';
-		$this->log->nobodyWins();
+        $log = new GameLog;
+		$log->nobodyWins();
 
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+		$this->assertStringEndsWith('MAXIMUM NUMBER OF ROUNDS EXCEEDED', $log->getLastEntry());
 	}
 
 	public function testCanLogNewRoundStarts()
 	{
-		$roundCount = 5;
-		$entry = "ROUND {$roundCount} BEGINS";
-		$this->log->newRoundStarts($roundCount);
+        $log = new GameLog;
+        $roundCount = 5;
+		$log->newRoundStarts($roundCount);
 
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+		self::assertSame("ROUND {$roundCount} BEGINS", $log->getLastEntry());
 	}
 
 	public function testCanLogPlayerWins()
 	{
+	    $log = new GameLog;
 		$playerName = 'Zenek';
-		$entry = "{$playerName} WINS";
-		$this->log->playerWins($playerName);
+		$log->playerWins($playerName);
 
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+		self::assertSame("{$playerName} WINS", $log->getLastEntry());
 	}
 
 	public function testCanLogGameEnds()
 	{
-		$entry = 'END OF GAME';
-		$this->log->gameEnds();
+	    $log = new GameLog;
+		$log->gameEnds();
 
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+		self::assertSame('END OF GAME', $log->getLastEntry());
 	}
 
 	public function testCanLogPlayerRollsDices()
 	{
-		$player = 'Gienek';
-		$results = [1, 1, 6];
-		$resultString = '';
+	    $log = new GameLog;
+		$playerName = 'Gienek';
+		$results = '1 1 6';
+		$log->playerRollsDices($playerName, [1, 1, 6]);
 
-		foreach ($results as $result) {
-			$resultString .= " {$result}";
-		}
-
-		$entry = "{$player} rolls dices and the result is:{$resultString}";
-
-		$this->log->playerRollsDices($player, $results);
-
-		$this->assertStringEndsWith(
-			$entry,
-			$this->log->getLastEntry()
-		);
+        self::assertSame("$playerName rolls dices and the result is: $results", $log->getLastEntry());
 	}
+
+    private function mockEntry()
+    {
+        return uniqid('Something is happening!', true);
+    }
 }
