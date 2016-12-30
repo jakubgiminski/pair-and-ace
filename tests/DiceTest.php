@@ -1,48 +1,27 @@
 <?php
 
 use App\Dice\Dice;
+use PHPUnit\Framework\TestCase;
 
-class DiceTest extends PHPUnit_Framework_TestCase
+class DiceTest extends TestCase
 {
-	public function setUp()
-	{
-		$this->dice = new Dice;
-	}
-
 	public function testCanBeInstantiated()
 	{
-		$this->assertInstanceOf(
-			Dice::class,
-			$this->dice
-		);
-	}
-
-	public function testCanBeRolled()
-	{
-		$this->assertNotEmpty($this->dice->roll());
+		self::assertInstanceOf(Dice::class, new Dice);
 	}
 
 	public function testResultOfRollingIsAnInteger()
 	{
-		$this->assertInternalType(
-			'int',
-			$this->dice->roll()
-		);
+		self::assertInternalType('int', (new Dice)->roll());
 	}
 
 	public function testResultOfRollingIsGreaterThanZero()
 	{
-		$this->assertGreaterThan(
-			0,
-			$this->dice->roll()
-		);
+		self::assertGreaterThan(0, (new Dice)->roll());
 	}
 
 	public function testResultOfRollingIsLessThanSeven()
 	{
-		$this->assertLessThan(
-			7,
-			$this->dice->roll()
-		);
+		self::assertLessThan(7, (new Dice)->roll());
 	}
 }
