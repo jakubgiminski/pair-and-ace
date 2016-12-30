@@ -6,6 +6,6 @@ class Dice implements DiceContract
 {
 	public function roll()
 	{
-		return rand(1,6);
+		return mt_rand(1,6);
 	}
 }
