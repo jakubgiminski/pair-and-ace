@@ -8,23 +8,36 @@ use App\Dice\DiceContract;
 
 class Game implements GameContract
 {
+    /** @var GameLogContract */
     protected $log;
 
+    /** @var array */
     protected $players = [];
 
+    /** @var array */
     protected $dices = [];
 
+    /** @var null|PlayerContract */
     protected $winner = null;
 
+    /** @var int */
     protected $roundLimit = 100;
 
+    /** @var bool */
     protected $gameRun = false;
 
+    /**
+     * @param GameLogContract $log
+     */
     public function __construct(GameLogContract $log)
     {
         $this->log = $log;
     }
 
+    /**
+     * @param PlayerContract $player
+     * @return self
+     */
     public function addPlayer(PlayerContract $player)
     {
         $this->players[] = $player;
@@ -32,6 +45,10 @@ class Game implements GameContract
         return $this;
     }
 
+    /**
+     * @param array $players
+     * @return self
+     */
     public function addPlayers(array $players)
     {
         foreach ($players as $player) {
@@ -41,11 +58,18 @@ class Game implements GameContract
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getPlayers()
     {
         return $this->players;
     }
 
+    /**
+     * @param DiceContract $dice
+     * @return self
+     */
     private function addDice(DiceContract $dice)
     {
         $this->dices[] = $dice;
@@ -53,9 +77,14 @@ class Game implements GameContract
         return $this;
     }
 
+    /**
+     * @param array $dices
+     * @throws \InvalidArgumentException
+     * @return self
+     */
     public function addDices(array $dices)
     {
-        if (count($dices) != 3) {
+        if (count($dices) !== 3) {
             throw new \InvalidArgumentException('You can only add three dices for this game to make sense.');
         }
 
@@ -66,21 +95,36 @@ class Game implements GameContract
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getDices()
     {
         return $this->dices;
     }
 
+    /**
+     * @param array $result
+     * @return bool
+     */
     public function isResultWinnig(array $result)
     {
         return $this->thereIsAPair($result) and $this->thereIsOneBesidesThePair($result);
     }
 
+    /**
+     * @param array $result
+     * @return bool
+     */
     private function thereIsAPair(array $result)
     {
         return $result != array_unique($result);
     }
 
+    /**
+     * @param array $result
+     * @return bool
+     */
     private function thereIsOneBesidesThePair(array $result)
     {
         $arrayValues = array_count_values($result);
@@ -92,21 +136,33 @@ class Game implements GameContract
         return false;
     }
 
+    /**
+     * @param PlayerContract $player
+     */
     public function setWinner(PlayerContract $player)
     {
         $this->winner = $player;
     }
 
+    /**
+     * @return Player|null
+     */
     public function getWinner()
     {
         return $this->winner;
     }
 
+    /**
+     * @return bool
+     */
     public function thereIsNoWinner()
     {
         return $this->winner == null;
     }
 
+    /**
+     * @return self
+     */
     public function run()
     {
         $this->guardAgainstNoDices();
@@ -144,6 +200,10 @@ class Game implements GameContract
         return $this;
     }
 
+    /**
+     * @throws \Exception
+     * @return array
+     */
     public function getGameReportAsArray()
     {
     	if (!$this->gameRun) {
@@ -153,6 +213,9 @@ class Game implements GameContract
         return $this->log->getReportAsArray();
     }
 
+    /**
+     * @throws \Exception
+     */
     private function guardAgainstNoDices()
     {
         if (empty($this->dices)) {
@@ -160,6 +223,9 @@ class Game implements GameContract
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function guardAgainstNoPlayers()
     {
         if (empty($this->players)) {
@@ -167,6 +233,9 @@ class Game implements GameContract
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function guardAgainsMultipleGameRuns()
     {
         if ($this->gameRun) {
