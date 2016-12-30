@@ -1,12 +1,13 @@
 <?php
 
 use App\Game\Game;
+use PHPUnit\Framework\TestCase;
 
-class GameTest extends PHPUnit_Framework_TestCase
+class GameTest extends TestCase
 {
 	public function setUp()
 	{
-		$gameLog = Mockery::mock('App\GameLog\GameLogContract')
+		$gameLog = Mockery::mock(App\GameLog\GameLogContract::class)
 			->shouldReceive('gameStarts')->andReturn(Mockery::self())
 			->shouldReceive('newRoundStarts')->andReturn(Mockery::self())
 			->shouldReceive('playerRollsDices')->andReturn(Mockery::self())
@@ -18,32 +19,9 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$this->game = new Game($gameLog);
 	}
 
-	private function mockDiceContract()
-	{
-		return Mockery::mock('App\Dice\DiceContract');
-	}
-
-	private function mockPlayerContract()
-	{
-		return Mockery::mock('App\Player\PlayerContract');
-	}
-
-	private function mockPlayer($playerName = 'Zygmunt')
-	{
-		return Mockery::mock('App\Player\Player')
-			->shouldReceive('getName')
-			->andReturn($playerName)
-			->shouldReceive('rollDices')
-			->andReturn([1,1,1])
-			->mock();
-	}
-
 	public function testCanBeInstantiated()
 	{
-		$this->assertInstanceOf(
-			Game::class,
-			$this->game
-		);
+		self::assertInstanceOf(Game::class, $this->game);
 	}
 
 	public function testCanAddThreeDices()
@@ -56,14 +34,11 @@ class GameTest extends PHPUnit_Framework_TestCase
 
 		$this->game->addDices($dices);
 
-		$this->assertEquals(
-			$dices,
-			$this->game->getDices()
-		);
+		self::assertSame($dices, $this->game->getDices());
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException \InvalidArgumentException
 	 */
 	public function testCannotAddTwoDices()
 	{
@@ -76,7 +51,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
+	 * @expectedException \InvalidArgumentException
 	 */
 	public function testCannotAddFourDices()
 	{
@@ -92,17 +67,14 @@ class GameTest extends PHPUnit_Framework_TestCase
 
 	public function testCanAddOnePlayer()
 	{
-		$playerName = uniqid('Zenek');
+		$playerName = uniqid('Zenek', true);
 		$player = $this->mockPlayer($playerName);
 		$this->game->addPlayer($player);
 
 		$players = $this->game->getPlayers();
 		$lastPlayer = end($players);
 
-		$this->assertEquals(
-			$player->getName(),
-			$lastPlayer->getName()
-		);
+		self::assertSame($player->getName(), $lastPlayer->getName());
 	}
 
 	public function testCanAddThreePlayers()
@@ -118,17 +90,14 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$players = $this->game->getPlayers();
 		$lastThreePlayers = array_slice($players, -3, 3, true);
 
-		$this->assertEquals(
-			$players,
-			$lastThreePlayers
-		);
+		self::assertSame($players, $lastThreePlayers);
 	}
 
 	public function testCanAddTenPlayers()
 	{
 		$players = [];
 		for ($i = 0; $i < 10; $i++) {
-			$players[] = $this->mockPlayer(uniqid('Szczepan'));
+			$players[] = $this->mockPlayer(uniqid('Szczepan', true));
 		}
 
 		$this->game->addPlayers($players);
@@ -136,10 +105,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$players = $this->game->getPlayers();
 		$lastTenPlayers = array_slice($players, -10, 10, true);
 
-		$this->assertEquals(
-			$players,
-			$lastTenPlayers
-		);
+		self::assertSame($players, $lastTenPlayers);
 	}
 
 	public function testCanSetAndGetWinner()
@@ -147,10 +113,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$winner = $this->mockPlayer('Karol');
 		$this->game->setWinner($winner);
 
-		$this->assertEquals(
-			$winner,
-			$this->game->getWinner()
-		);
+		self::assertSame($winner, $this->game->getWinner());
 	}
 
 	public function testCanTellIfThereIsAWinner()
@@ -158,7 +121,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$winner = $this->mockPlayer('Rysiek');
 		$this->game->setWinner($winner);
 
-		$this->assertFalse($this->game->thereIsNoWinner());
+		self::assertFalse($this->game->thereIsNoWinner());
 	}
 
 	public function testCanTellIfThereIsNoWinner()
@@ -169,31 +132,25 @@ class GameTest extends PHPUnit_Framework_TestCase
 	public function testCanTellIfResultIsWinning()
 	{
 		$winningResult = [1, 2, 2];
-		$this->assertTrue($this->game->isResultWinnig($winningResult));
+		self::assertTrue($this->game->isResultWinnig($winningResult));
 	}
 
 	public function testCanTellThatResultIsNotWinnigIfThereIsNoPair()
 	{
 		$result = [1, 2, 6];
-		$this->assertFalse(
-			$this->game->isResultWinnig($result)
-		);
+		self::assertFalse($this->game->isResultWinnig($result));
 	}
 
 	public function testCanTellThatResultIsNotWinnigIfThereIsNoOne()
 	{
 		$result = [3, 4, 5];
-		$this->assertFalse(
-			$this->game->isResultWinnig($result)
-		);
+		self::assertFalse($this->game->isResultWinnig($result));
 	}
 
 	public function testCanTellThatResultIsNotWinnigIfThereIsNoOneBesidesThePair()
 	{
 		$result = [1, 1, 5];
-		$this->assertFalse(
-			$this->game->isResultWinnig($result)
-		);
+		self::assertFalse($this->game->isResultWinnig($result));
 	}
 	/**
 	 * @expectedException Exception
@@ -225,7 +182,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @expectedException Exception
 	 */
-	public function testCanOnlyRunOnce()
+	public function testCanNotRunTwice()
 	{
 		$this->addThreeDicesAndTwoPlayers();
 
@@ -238,10 +195,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$this->addThreeDicesAndTwoPlayers();
 		$this->game->run();
 
-		$this->assertEquals(
-			$this->game->getGameReportAsArray(),
-			['mocked report']
-		);
+		self::assertEquals($this->game->getGameReportAsArray(), ['mocked report']);
 	}
 
 	/**
@@ -253,17 +207,32 @@ class GameTest extends PHPUnit_Framework_TestCase
 		$this->game->getGameReportAsArray();
 	}
 
-	private function addThreeDicesAndTwoPlayers()
-	{
-		$this->game->addDices([
-			$this->mockDiceContract(),
-			$this->mockDiceContract(),
-			$this->mockDiceContract()
-		]);
+    private function mockDiceContract()
+    {
+        return Mockery::mock(App\Dice\DiceContract::class);
+    }
 
-		$this->game->addPlayers([
-			$this->mockPlayer(),
-			$this->mockPlayer()
-		]);
-	}
+    private function mockPlayer($playerName = 'Zygmunt')
+    {
+        return Mockery::mock(App\Player\Player::class)
+            ->shouldReceive('getName')
+            ->andReturn($playerName)
+            ->shouldReceive('rollDices')
+            ->andReturn([1,1,1])
+            ->mock();
+    }
+
+    private function addThreeDicesAndTwoPlayers()
+    {
+        $this->game->addDices([
+            $this->mockDiceContract(),
+            $this->mockDiceContract(),
+            $this->mockDiceContract()
+        ]);
+
+        $this->game->addPlayers([
+            $this->mockPlayer(),
+            $this->mockPlayer()
+        ]);
+    }
 }
