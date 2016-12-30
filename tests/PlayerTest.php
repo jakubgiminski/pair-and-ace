@@ -1,8 +1,9 @@
 <?php
 
 use App\Player\Player;
+use PHPUnit\Framework\TestCase;
 
-class PlayerTest extends PHPUnit_Framework_TestCase
+class PlayerTest extends TestCase
 {
 	public function setUp()
 	{
@@ -11,22 +12,19 @@ class PlayerTest extends PHPUnit_Framework_TestCase
 
 	public function testCanBeInstantiated()
 	{
-		$this->assertInstanceOf(
-			Player::class,
-			$this->player
-		);
+		self::assertInstanceOf(Player::class, $this->player);
 	}
 
 	public function testCanRollOneDice()
 	{
-		$dice = Mockery::mock('App\Dice\DiceContract')
+		$dice = Mockery::mock(App\Dice\DiceContract::class)
 			->shouldReceive('roll')
 			->andReturn(1)
 			->mock();
 
 		$result = $this->player->rollDice($dice);
 
-		$this->assertInternalType(
+		self::assertInternalType(
 			'int',
 			$result
 		);
@@ -34,38 +32,33 @@ class PlayerTest extends PHPUnit_Framework_TestCase
 
 	public function testCanRollThreeDices()
 	{
-		$firstDice = Mockery::mock('App\Dice\DiceContract')
+		$firstDice = Mockery::mock(App\Dice\DiceContract::class)
 			->shouldReceive('roll')
 			->andReturn(1)
 			->mock();
 
-		$secondDice = Mockery::mock('App\Dice\DiceContract')
+		$secondDice = Mockery::mock(App\Dice\DiceContract::class)
 			->shouldReceive('roll')
 			->andReturn(3)
 			->mock();
 
-		$thirdDice = Mockery::mock('App\Dice\DiceContract')
+		$thirdDice = Mockery::mock(App\Dice\DiceContract::class)
 			->shouldReceive('roll')
 			->andReturn(6)
 			->mock();
 
-		$results = $this->player->rollDices(
-			[
-				$firstDice,
-				$secondDice,
-				$thirdDice
-			]
-		);
+		$results = $this->player->rollDices([
+            $firstDice,
+            $secondDice,
+            $thirdDice
+        ]);
 
-		$this->assertEquals(
-			[1, 3, 6],
-			$results
-		);
+		self::assertEquals([1, 3, 6], $results);
 	}
 
 	public function testNameCanBeFetchedWithAGetter()
 	{
 		$player = new Player('Henryk');
-		$this->assertEquals($player->getName(), 'Henryk');
+		self::assertSame($player->getName(), 'Henryk');
 	}
 }
